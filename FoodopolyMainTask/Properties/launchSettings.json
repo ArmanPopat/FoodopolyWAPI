@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FoodopolyMainTask": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

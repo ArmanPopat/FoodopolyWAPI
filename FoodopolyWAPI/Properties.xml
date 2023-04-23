@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<properties>
+	<set set="Brown">
+		<property set="Brown">
+			<name>Salad</name>
+			<boardPosition>1</boardPosition>
+			<price>60</price>
+			<rent>2</rent>
+			<rentL1>10</rentL1>
+			<rentL2>30</rentL2>
+			<rentL3>90</rentL3>
+			<rentL4>160</rentL4>
+			<rentL5>250</rentL5>
+			<upgradeCost>50</upgradeCost>
+		</property>
+
+		<property set="Brown">
+			<name>Fries</name>
+			<boardPosition>3</boardPosition>
+			<price>60</price>
+			<rent>4</rent>
+			<rentL1>20</rentL1>
+			<rentL2>60</rentL2>
+			<rentL3>180</rentL3>
+			<rentL4>320</rentL4>
+			<rentL5>450</rentL5>
+			<upgradeCost>50</upgradeCost>
+		</property>
+	</set>
+
+	<set set="Light Blue">
+		<property set="Light Blue">
+			<name>Tacos</name>
+			<boardPosition>6</boardPosition>
+			<price>100</price>
+			<rent>6</rent>
+			<rentL1>30</rentL1>
+			<rentL2>90</rentL2>
+			<rentL3>270</rentL3>
+			<rentL4>400</rentL4>
+			<rentL5>550</rentL5>
+			<upgradeCost>50</upgradeCost>
+		</property>
+
+		<property set="Light Blue">
+			<name>Fajitas</name>
+			<boardPosition>8</boardPosition>
+			<price>100</price>
+			<rent>6</rent>
+			<rentL1>30</rentL1>
+			<rentL2>90</rentL2>
+			<rentL3>270</rentL3>
+			<rentL4>400</rentL4>
+			<rentL5>550</rentL5>
+			<upgradeCost>50</upgradeCost>
+		</property>
+
+		<property set="Light Blue">
+			<name>Burrito</name>
+			<boardPosition>9</boardPosition>
+			<price>120</price>
+			<rent>8</rent>
+			<rentL1>40</rentL1>
+			<rentL2>100</rentL2>
+			<rentL3>300</rentL3>
+			<rentL4>450</rentL4>
+			<rentL5>600</rentL5>
+			<upgradeCost>50</upgradeCost>
+		</property>
+	</set>
+	<set set ="Purple">
+		<property set="Purple">
+			<name>Pasta</name>
+			<boardPosition>11</boardPosition>
+			<price>140</price>
+			<rent>10</rent>
+			<rentL1>50</rentL1>
+			<rentL2>150</rentL2>
+			<rentL3>450</rentL3>
+			<rentL4>625</rentL4>
+			<rentL5>750</rentL5>
+			<upgradeCost>100</upgradeCost>
+		</property>
+
+		<property set="Purple">
+			<name>Rissoto</name>
+			<boardPosition>13</boardPosition>
+			<price>140</price>
+			<rent>10</rent>
+			<rentL1>50</rentL1>
+			<rentL2>150</rentL2>
+			<rentL3>450</rentL3>
+			<rentL4>625</rentL4>
+			<rentL5>750</rentL5>
+			<upgradeCost>100</upgradeCost>
+		</property>
+
+		<property set="Purple">
+			<name>Pizza</name>
+			<boardPosition>14</boardPosition>
+			<price>160</price>
+			<rent>12</rent>
+			<rentL1>60</rentL1>
+			<rentL2>180</rentL2>
+			<rentL3>500</rentL3>
+			<rentL4>700</rentL4>
+			<rentL5>900</rentL5>
+			<upgradeCost>100</upgradeCost>
+		</property>
+	</set>
+	<set set="Orange">
+		<property set="Orange">
+			<name>Crispy Mogo</name>
+			<boardPosition>16</boardPosition>
+			<price>180</price>
+			<rent>14</rent>
+			<rentL1>70</rentL1>
+			<rentL2>200</rentL2>
+			<rentL3>550</rentL3>
+			<rentL4>750</rentL4>
+			<rentL5>950</rentL5>
+			<upgradeCost>100</upgradeCost>
+		</property>
+
+		<property set="Orange">
+			<name>Chilli Paneer</name>
+			<boardPosition>18</boardPosition>
+			<price>180</price>
+			<rent>14</rent>
+			<rentL1>70</rentL1>
+			<rentL2>200</rentL2>
+			<rentL3>550</rentL3>
+			<rentL4>750</rentL4>
+			<rentL5>950</rentL5>
+			<upgradeCost>100</upgradeCost>
+		</property>
+
+		<property set="Orange">
+			<name>Mixed Sizzler</name>
+			<boardPosition>19</boardPosition>
+			<price>200</price>
+			<rent>16</rent>
+			<rentL1>80</rentL1>
+			<rentL2>220</rentL2>
+			<rentL3>600</rentL3>
+			<rentL4>800</rentL4>
+			<rentL5>1000</rentL5>
+			<upgradeCost>100</upgradeCost>
+		</property>
+	</set>
+	<set set="Red">
+		<property set="Red">
+			<name>Kung Pao Chicken</name>
+			<boardPosition>21</boardPosition>
+			<price>220</price>
+			<rent>18</rent>
+			<rentL1>90</rentL1>
+			<rentL2>250</rentL2>
+			<rentL3>700</rentL3>
+			<rentL4>875</rentL4>
+			<rentL5>1050</rentL5>
+			<upgradeCost>150</upgradeCost>
+		</property>
+
+		<property set="Red">
+			<name>Pecking Roasted Duck</name>
+			<boardPosition>23</boardPosition>
+			<price>220</price>
+			<rent>18</rent>
+			<rentL1>90</rentL1>
+			<rentL2>250</rentL2>
+			<rentL3>700</rentL3>
+			<rentL4>875</rentL4>
+			<rentL5>1050</rentL5>
+			<upgradeCost>150</upgradeCost>
+		</property>
+
+		<property set="Red">
+			<name>Hot Pot</name>
+			<boardPosition>24</boardPosition>
+			<price>240</price>
+			<rent>20</rent>
+			<rentL1>100</rentL1>
+			<rentL2>300</rentL2>
+			<rentL3>750</rentL3>
+			<rentL4>925</rentL4>
+			<rentL5>1100</rentL5>
+			<upgradeCost>150</upgradeCost>
+		</property>
+	</set>
+	<set set="Yellow">
+		<property set="Yellow">
+			<name>Katsu Curry</name>
+			<boardPosition>26</boardPosition>
+			<price>260</price>
+			<rent>22</rent>
+			<rentL1>110</rentL1>
+			<rentL2>330</rentL2>
+			<rentL3>800</rentL3>
+			<rentL4>975</rentL4>
+			<rentL5>1150</rentL5>
+			<upgradeCost>150</upgradeCost>
+		</property>
+
+		<property set="Yellow">
+			<name>Donburi</name>
+			<boardPosition>27</boardPosition>
+			<price>260</price>
+			<rent>22</rent>
+			<rentL1>110</rentL1>
+			<rentL2>330</rentL2>
+			<rentL3>800</rentL3>
+			<rentL4>975</rentL4>
+			<rentL5>1150</rentL5>
+			<upgradeCost>150</upgradeCost>
+		</property>
+
+		<property set="Yellow">
+			<name>Ramen</name>
+			<boardPosition>29</boardPosition>
+			<price>280</price>
+			<rent>24</rent>
+			<rentL1>120</rentL1>
+			<rentL2>360</rentL2>
+			<rentL3>850</rentL3>
+			<rentL4>1025</rentL4>
+			<rentL5>1200</rentL5>
+			<upgradeCost>150</upgradeCost>
+		</property>
+	</set>
+	<set set="Green">
+		<property set="Green">
+			<name>Eel</name>
+			<boardPosition>31</boardPosition>
+			<price>300</price>
+			<rent>26</rent>
+			<rentL1>130</rentL1>
+			<rentL2>390</rentL2>
+			<rentL3>900</rentL3>
+			<rentL4>1100</rentL4>
+			<rentL5>1275</rentL5>
+			<upgradeCost>200</upgradeCost>
+		</property>
+
+		<property set="Green">
+			<name>Crab</name>
+			<boardPosition>32</boardPosition>
+			<price>300</price>
+			<rent>26</rent>
+			<rentL1>130</rentL1>
+			<rentL2>390</rentL2>
+			<rentL3>900</rentL3>
+			<rentL4>1100</rentL4>
+			<rentL5>1275</rentL5>
+			<upgradeCost>200</upgradeCost>
+		</property>
+
+		<property set="Green">
+			<name>Sushi</name>
+			<boardPosition>34</boardPosition>
+			<price>320</price>
+			<rent>28</rent>
+			<rentL1>150</rentL1>
+			<rentL2>450</rentL2>
+			<rentL3>1000</rentL3>
+			<rentL4>1200</rentL4>
+			<rentL5>1400</rentL5>
+			<upgradeCost>200</upgradeCost>
+		</property>
+	</set>
+	<set set="Dark Blue">
+		<property set="Dark Blue">
+			<name>Lobster</name>
+			<boardPosition>37</boardPosition>
+			<price>350</price>
+			<rent>35</rent>
+			<rentL1>175</rentL1>
+			<rentL2>500</rentL2>
+			<rentL3>1100</rentL3>
+			<rentL4>1300</rentL4>
+			<rentL5>1500</rentL5>
+			<upgradeCost>200</upgradeCost>
+		</property>
+
+		<property set="Dark Blue">
+			<name>Caviar</name>
+			<boardPosition>39</boardPosition>
+			<price>400</price>
+			<rent>50</rent>
+			<rentL1>200</rentL1>
+			<rentL2>600</rentL2>
+			<rentL3>1400</rentL3>
+			<rentL4>1700</rentL4>
+			<rentL5>2000</rentL5>
+			<upgradeCost>200</upgradeCost>
+		</property>
+	</set>
+	<set set="Stations">
+		<property set="Stations">
+			<name>Plate</name>
+			<boardPosition>5</boardPosition>
+			<price>200</price>
+			<rentL1>25</rentL1>
+			<rentL2>50</rentL2>
+			<rentL3>100</rentL3>
+			<rentL4>200</rentL4>
+		</property>
+
+		<property set="Stations">
+			<name>Fork</name>
+			<boardPosition>15</boardPosition>
+			<price>200</price>
+			<rentL1>25</rentL1>
+			<rentL2>50</rentL2>
+			<rentL3>100</rentL3>
+			<rentL4>200</rentL4>
+		</property>
+
+		<property set="Stations">
+			<name>Knife</name>
+			<boardPosition>25</boardPosition>
+			<price>200</price>
+			<rentL1>25</rentL1>
+			<rentL2>50</rentL2>
+			<rentL3>100</rentL3>
+			<rentL4>200</rentL4>
+		</property>
+
+		<property set="Stations">
+			<name>Spoon</name>
+			<boardPosition>35</boardPosition>
+			<price>200</price>
+			<rentL1>25</rentL1>
+			<rentL2>50</rentL2>
+			<rentL3>100</rentL3>
+			<rentL4>200</rentL4>
+		</property>
+	</set>
+	<set set="Utilities">
+		<property set="Utilities">
+			<name>Drink Fountain</name>
+			<boardPosition>12</boardPosition>
+			<price>150</price>
+			<rentL1>4</rentL1>
+			<rentL2>10</rentL2>
+		</property>
+
+		<property set="Utilities">
+			<name>Ice-Cream Fountain</name>
+			<boardPosition>28</boardPosition>
+			<price>150</price>
+			<rentL1>4</rentL1>
+			<rentL2>10</rentL2>
+		</property>
+	</set>
+</properties>
