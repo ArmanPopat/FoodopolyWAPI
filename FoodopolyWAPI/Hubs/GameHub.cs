@@ -1,9 +1,11 @@
 ﻿using BoardClasses;
+using FoodopolyClasses;
 using FoodopolyWAPI.Records;
 using FoodopolyWAPI.Services;
 using GameClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualBasic;
 using PlayerClasses;
 using SetClasses;
 using System.Diagnostics;
@@ -105,6 +107,36 @@ public class GameHub : GameGroupsHub
 
     }
 
+    public async Task EndTurn(PlayerAuthorisationRecord player, int methodCount)
+    {
+        await Task.Run(async () =>
+        {
+            try
+            {
+                ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+
+
+
+                //Validation
+                TurnAuthorisation();
+                if (!connection.game.Turn.RollEventDone) //Might Need Checking
+                {
+                    Error();
+                    return;
+                }
+                string msg = $"{connection.game.CurrentTurnPlayer.Name} has ended their turn.";
+                CalledGameMethods.NextTurn(connection.game);
+                await Clients.Group(await GettingGroupName()).SendAsync("StartTurn", methodCount, connection.game, msg);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Error();
+                return;
+            }
+        });
+    }
+
     //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
     [Authorize(Policy = "GameMethodAuthorisation")]
     public async Task Buy(PlayerAuthorisationRecord player, int methodCount, int playerPos)
@@ -145,7 +177,65 @@ public class GameHub : GameGroupsHub
        
     }
 
+    //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
+    [Authorize(Policy = "GameMethodAuthorisation")]
+    public async Task Upgrade(PlayerAuthorisationRecord player, int methodCount, int boardPosition)
+    {
+        var undesiderdPos = new int[] { 7, 22, 36, 2, 17, 33, 0, 10, 20, 30, 4, 38, 5, 15, 25, 35, 12, 28 };
+        if (undesiderdPos.Any(o => o == boardPosition))
+        {
+            Debug.WriteLine($"Error: Trying To Upgrade an Upgradable Property.");
+            Error();
+            return;
+        }
+        GameClass game;
+        try
+        {
+            ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+            game = connection.game;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+            Error();
+            return;
+        }
+        await Task.Run(async () =>
+        {
+            foreach (KeyValuePair<string, SetProp> keyValue in game.setsPropDict)
+            {
+                foreach (Property property in keyValue.Value.Properties)
+                {
+                    if (property.BoardPosition == boardPosition)
+                    {
 
+                        //Checking
+                        if (property.Owned && keyValue.Value.SetExclusivelyOwned)
+                        {
+                            if (property.Owner.Name == player.username)
+                            {
+                                if (property.NumOfUpgrades < 5)
+                                {
+                                    if (property.Owner.Cash >= property.UpgradeCost)
+                                    {
+                                        if (keyValue.Value.Properties.All(o => o.NumOfUpgrades >= property.NumOfUpgrades))
+                                        {
+                                            property.Upgrade();
+                                            await Clients.Group(await GettingGroupName()).SendAsync("Upgrade", boardPosition, methodCount);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Error();
+                        return;
+                    }
+                }
+            }
+
+        });
+    }
 
 
     //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
@@ -170,11 +260,17 @@ public class GameHub : GameGroupsHub
         }
         await Task.Run(async () =>
         {
+            //Validates if it's their turn
             TurnAuthorisation();
+            //Validates if allowed to roll
+            if (game.Turn.RollEventDone)
+            {
+                Error();
+            }
             (string Msg, bool Double, bool Diet, int TotalRoll) msgAndDoubleAndJailAndTotal = playerClass.StandardRollDiceEvent(game);
             //game.Turn.turnMsgCount++;
             //await SendMessage()
-            Clients.Group(await GettingGroupName()).SendAsync("RecieveStandardDiceRoll", msgAndDoubleAndJailAndTotal, methodCount);
+            await Clients.Group(await GettingGroupName()).SendAsync("RecieveStandardDiceRoll", msgAndDoubleAndJailAndTotal, methodCount);
 
 
             //Calls the appropriate landevent-done Independently on server and client side, sse if it works
