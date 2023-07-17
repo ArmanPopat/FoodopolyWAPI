@@ -1,6 +1,6 @@
 ﻿using FoodopolyClasses;
 using GameClasses;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 using System.Diagnostics;
 
 namespace FoodopolyWAPI.Services;

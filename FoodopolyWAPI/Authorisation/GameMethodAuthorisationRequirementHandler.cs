@@ -1,7 +1,7 @@
 ﻿using FoodopolyWAPI.Records;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 using System.Diagnostics;
 
 namespace FoodopolyWAPI.Authorisation;

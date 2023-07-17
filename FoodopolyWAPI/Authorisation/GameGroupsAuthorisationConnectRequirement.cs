@@ -3,7 +3,7 @@ using FoodopolyWAPI.Services;
 using GameClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 
 using System.Diagnostics;
 

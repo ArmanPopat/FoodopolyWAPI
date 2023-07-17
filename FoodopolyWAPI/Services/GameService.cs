@@ -1,6 +1,6 @@
 ﻿using GameClasses;
 //using FoodopolySignalR.Services;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 using System.Diagnostics;
 using StandardInformation;
 using FoodopolyClasses.StandardInformation;

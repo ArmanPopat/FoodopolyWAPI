@@ -4,7 +4,7 @@ using GameClasses;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Security.Claims;

@@ -6,7 +6,7 @@ using GameClasses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualBasic;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 using SetClasses;
 using System.Diagnostics;
 using System.IO.Pipelines;
@@ -176,6 +176,134 @@ public class GameHub : GameGroupsHub
         });
        
     }
+
+    //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
+    [Authorize(Policy = "GameMethodAuthorisation")]
+    public async Task Mortgage(PlayerAuthorisationRecord player, int methodCount, int boardPosition)
+    {
+        var undesiderdPos = new int[] { 7, 22, 36, 2, 17, 33, 0, 10, 20, 30, 4, 38 };
+        if (undesiderdPos.Any(o => o == boardPosition))
+        {
+            Debug.WriteLine($"Error: Trying To Mortgage not a Property.");
+            Error();
+            return;
+        }
+        GameClass game;
+        try
+        {
+            ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+            game = connection.game;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+            Error();
+            return;
+        }
+        await Task.Run(async () =>
+        {
+            if (boardPosition == 12 || boardPosition == 28)
+            {
+                Utility utility = game.utilities.Properties.First(o => o.BoardPosition == boardPosition);
+                if (!utility.Owned)
+                {
+                    Debug.WriteLine("Error: Property Unowned");
+                    Error();
+                    return;
+                }
+                if (utility.Owner.Name != player.username)
+                {
+                    Debug.WriteLine("Error: Property Owned by Another Player");
+                    Error();
+                    return;
+                }
+                if (utility.Mortgaged)
+                {
+                    Debug.WriteLine("Error: Property already mortgaged.");
+                    Error();
+                    return;
+                }
+
+                utility.Mortgage();
+                await Clients.Group(await GettingGroupName()).SendAsync("Mortgage", boardPosition, methodCount);
+                return;
+            }
+            else if (boardPosition == 5 || boardPosition == 15 || boardPosition == 25 || boardPosition == 35)
+            {
+                Station station = game.stations.Properties.First(o => o.BoardPosition == boardPosition);
+                if (!station.Owned)
+                {
+                    Debug.WriteLine("Error: Property Unowned");
+                    Error();
+                    return;
+                }
+                if (station.Owner.Name != player.username)
+                {
+                    Debug.WriteLine("Error: Property Owned by Another Player");
+                    Error();
+                    return;
+                }
+                if (station.Mortgaged)
+                {
+                    Debug.WriteLine("Error: Property already mortgaged.");
+                    Error();
+                    return;
+                }
+
+                station.Mortgage();
+                await Clients.Group(await GettingGroupName()).SendAsync("Mortgage", boardPosition, methodCount);
+                return;
+            }
+            foreach (KeyValuePair<string, SetProp> keyValue in game.setsPropDict)
+            {
+                foreach (Property property in keyValue.Value.Properties)
+                {
+                    if (property.BoardPosition == boardPosition)
+                    {
+                        //Checking
+                        if (!property.Owned)
+                        {
+                            Debug.WriteLine("Error: Property Unowned");
+                            Error();
+                            return;
+                        }
+                        if (property.Owner.Name != player.username)
+                        {
+                            Debug.WriteLine("Error: Property Owned by Another Player");
+                            Error();
+                            return;
+                        }
+                        if (property.Mortgaged)
+                        {
+                            Debug.WriteLine("Error: Property already mortgaged.");
+                            Error();
+                            return;
+                        }
+                        if (property.NumOfUpgrades != 0)
+                        {
+                            Debug.WriteLine("Error: Property has upgrades.");
+                            Error();
+                            return;
+                        }
+                        if (keyValue.Value.Properties.Any(o => o.NumOfUpgrades != 0)) //Check
+                        {
+                            Debug.WriteLine("Error: Set has upgrades.");
+                            Error();
+                            return;
+                        }    
+                        property.Mortgage();
+                        await Clients.Group(await GettingGroupName()).SendAsync("Mortgage", boardPosition, methodCount);
+                        return;
+                    }
+                }
+            }
+            Debug.WriteLine("Error: Property not mortgagable.");
+            Error();
+            return;
+
+        });
+    }
+
 
     //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
     [Authorize(Policy = "GameMethodAuthorisation")]

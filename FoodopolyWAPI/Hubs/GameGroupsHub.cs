@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using PlayerClasses;
+using FoodopolyClasses.PlayerClasses;
 using System;
 using System.Diagnostics;
 
