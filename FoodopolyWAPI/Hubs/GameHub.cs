@@ -10,6 +10,10 @@ using FoodopolyClasses.PlayerClasses;
 using SetClasses;
 using System.Diagnostics;
 using System.IO.Pipelines;
+using FoodopolyClasses.Records;
+using FoodopolyClasses.TradeClasses;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.CompilerServices;
 
 namespace FoodopolyWAPI.Hubs;
 
@@ -81,6 +85,7 @@ public class GameHub : GameGroupsHub
         await Clients.Group(await GettingGroupName()).SendAsync("Recieve Message", msgCount, msg);
     }
 
+    //might change this to send gameclass over first
     private void Error()
     {
         throw new HubException("Error in connection, please reconnect.");
@@ -136,6 +141,144 @@ public class GameHub : GameGroupsHub
             }
         });
     }
+
+    //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
+    [Authorize(Policy = "GameMethodAuthorisation")]
+    public async Task TradeInitiated(PlayerAuthorisationRecord player, int methodCount, InitiateTradeRecord tradeRecord)
+    {
+        //Validation
+        await Task.Run(async () => 
+        {
+            try
+            {
+                ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+                if (!Trade.ValidateTrade(connection.game, player.username, tradeRecord))
+                {
+                    await Clients.Group(await GettingGroupName()).SendAsync("TradeError", methodCount, player.username, tradeRecord, connection.game);
+                    Debug.WriteLine("Trade Error");
+                    return;
+                }
+                //Add to GameClass TradeRecords
+                int recordKey;
+                if (connection.game.TradeRecords.Count == 0)
+                {
+                    recordKey = 1;
+                }
+                else
+                {
+                    recordKey = connection.game.TradeRecords.Keys.Max() + 1;
+                }
+
+                connection.game.TradeRecords.Add(recordKey, tradeRecord);
+                await Clients.Group(await GettingGroupName()).SendAsync("TradeReceived", methodCount, player.username,recordKey, tradeRecord, connection.game);
+                return;
+                
+                
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Error();
+                return;
+            }
+        });
+
+    }
+
+    //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
+    [Authorize(Policy = "GameMethodAuthorisation")]
+    public async Task TradeConfirmed(PlayerAuthorisationRecord player, int methodCount, int tradeRecordKey, InitiateTradeRecord tradeRecordSent, List<(int BoardPosition, bool ToUnmortgage)> mortPropsToDo)
+    {
+        //Validation
+        await Task.Run(async () =>
+        {
+            
+            
+            try
+            {
+                ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+                InitiateTradeRecord tradeRecord;
+                try
+                {
+                    tradeRecord = connection.game.TradeRecords[tradeRecordKey];
+                    if (tradeRecord != tradeRecordSent)
+                    {
+                        throw new InvalidDataException();
+                    }
+                }
+                catch
+                {
+                    Debug.WriteLine("Can't find trade record from the tradeRecordKey or trade Record Different");
+                    await Clients.Caller.SendAsync("TradeNoLongerValid", methodCount, tradeRecordKey, tradeRecordSent, connection.game);
+                    return;
+                }
+
+                //check player is the proposed to
+                if (tradeRecord.otherPlayerName != player.username)
+                {
+                    Debug.WriteLine("The player trying to accept is no the one being proposed to.");
+                    Error();
+                    return;
+                }
+
+
+                if (!Trade.ValidateTrade(connection.game, player.username, tradeRecord))
+                {
+                    connection.game.TradeRecords.Remove(tradeRecordKey);
+                    await Clients.Caller.SendAsync("TradeNoLongerValid", methodCount, tradeRecordKey, tradeRecord, connection.game);
+                    Debug.WriteLine("TradeNoLongerValid");
+                    return;
+                }
+                //Confirm Trade
+                await Trade.AcceptTradeAsync(tradeRecordKey,tradeRecord, connection.game, mortPropsToDo);
+                await Clients.Group(await GettingGroupName()).SendAsync("TradeConfirmed", methodCount, tradeRecordKey, tradeRecord, mortPropsToDo);
+                return;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Error();
+                return;
+            }
+        });
+
+    }
+
+    //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
+    [Authorize(Policy = "GameMethodAuthorisation")]
+    public async Task UnmortgageOrFeeTradeResponse(PlayerAuthorisationRecord player, int methodCount, InitiateTradeRecord tradeRecordSent, List<(int BoardPosition, bool ToUnmortgage)> mortPropsToDo)
+    {
+        PlayerClass playerClass;
+        GameClass game;
+        await Task.Run(async () =>
+        {
+            try
+            {
+                ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+                game = connection.game;
+                //get connection playerclass
+                playerClass = game.PlayerList.First<PlayerClass>(playerClass => playerClass.Name == connection.username);
+                (List<Station> selectedStations, List<Utility> selectedUtilities, List<Property> selectedProperties) = await Trade.IdentifyTheOwnedStuff(tradeRecordSent.theirSelectedStationsBoardPos,
+                tradeRecordSent.theirSelectedUtilitiesBoardPos, tradeRecordSent.theirSelectedPropertiesBoardPos, game);
+                playerClass.MorgatgeFeesNotPaidOrUnMortgaged.Remove(tradeRecordSent);
+                await Trade.UnMortgageOrPayFee(playerClass, selectedStations, selectedUtilities, selectedProperties, mortPropsToDo);
+                await Clients.Group(await GettingGroupName()).SendAsync("UnmortgageOrFeeTradeResponded", methodCount, tradeRecordSent, mortPropsToDo);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Error();
+                return;
+            }
+            
+        });
+    }
+
 
     //First Argument must be PLAYERAUTHORISATIONRECORD - The player they wish to move or do stuff as
     [Authorize(Policy = "GameMethodAuthorisation")]
@@ -404,6 +547,27 @@ public class GameHub : GameGroupsHub
             //Calls the appropriate landevent-done Independently on server and client side, sse if it works
             await game.CurrentTurnPlayer.LandEventAsync(game);
         });
+        
+    }
+    public override async Task OnConnectedAsync()
+    {
+        await base.OnConnectedAsync();
+        try
+        {
+            ConnectionRecord connection = (ConnectionRecord)Context.Items["connection"];
+            //get connection playerclass
+            PlayerClass playerClass = connection.game.PlayerList.First<PlayerClass>(playerClass => playerClass.Name == connection.username);
+            if (playerClass.CheckIfMortgageFeesHaveToBePaid())
+            {
+                await Clients.Caller.SendAsync("TradeMortgageFeesDue");
+            }
 
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error: {ex.Message}");
+            Error();
+            return;
+        }
     }
 }
